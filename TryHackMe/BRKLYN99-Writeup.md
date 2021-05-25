@@ -64,7 +64,7 @@ Now that we have the background image on our box we can start to preform some si
 
 Hmm... it seems to be giving us an error let's try `stegcracker`
 
-![stegcracker](https://i.imgur.com/aX8Dg8A.png)
+![stegcracker](https://i.imgur.com/DiFqRPE.png)
 
 Looks like `stegcracker` worked perfectly and inside of the hidden file we get `holt`'s password, knowing that `ssh` is open from our `nmap` scan we can attempt to login as `holt`.
 
