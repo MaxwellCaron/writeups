@@ -1,6 +1,8 @@
 # [THM-BrooklynNineNine](https://tryhackme.com/room/brooklynninenine) - Maxwell Caron
 This room is aimed for beginner level hackers but anyone can try to hack this box. There are two main intended ways to root the box.
 
+
+
 Inital `nmap` scan:
 ```
 $ nmap -T4 -A -p- -oN allports 10.10.241.180
