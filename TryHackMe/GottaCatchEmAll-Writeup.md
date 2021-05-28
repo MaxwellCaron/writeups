@@ -1,4 +1,4 @@
-# [THM-GottaCatchEmAll](https://tryhackme.com/room/pokemon) - Maxwell Caron
+# <a href="https://tryhackme.com/room/pokemon" target="_blank">THM-GottaCatchEmAll</a>  - Maxwell Caron 
 
 This room is based on the original Pokemon series. Can you obtain all the Pokemon in this room?
 
