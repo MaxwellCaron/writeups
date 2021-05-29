@@ -1,9 +1,7 @@
 # [THM-BrooklynNineNine](https://tryhackme.com/room/brooklynninenine) - Maxwell Caron
 This room is aimed for beginner level hackers but anyone can try to hack this box. There are two main intended ways to root the box.
 
-
-
-Inital `nmap` scan:
+Initial `nmap` scan:
 ```
 $ nmap -T4 -A -p- -oN allports 10.10.241.180
 
@@ -42,11 +40,11 @@ Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 
 Now that we have our `nmap` scan, there are two ways to root this box, I will be showing both. 
 
-## Path 1: Steganography
+# Path 1: Steganography
 
 First we will look at the web server running on port 80.
 
-### Web App
+## Web App
 
 ![web page](https://i.imgur.com/EOcEGSW.jpg)
 
@@ -54,7 +52,7 @@ We see a simple page with nothing but an image, after running a gobuster and nik
 
 ![source code](https://i.imgur.com/Z5FfceX.png)
 
-Looking through the source code of the web page we see a comment that referres to `steganography` as well as showing us the name of the background image so we can easily `wget` it onto our box.
+Looking through the source code of the web page we see a comment that refers to `steganography` as well as showing us the name of the background image so we can easily `wget` it onto our box.
 
 ### External
 
@@ -82,7 +80,7 @@ First and foremost I always run `sudo -l`, and this time it paid off, we see tha
 
 ![gtfo](https://i.imgur.com/HhpBsJN.png)
 
-Heading over to [GTFOBins](https://gtfobins.github.io/) we can search `nano` and click on the `sudo` tag because we have `sudo` privilages to that command.
+Heading over to [GTFOBins](https://gtfobins.github.io/) we can search `nano` and click on the `sudo` tag because we have `sudo` privileges to that command.
 
 ![gtfobins2](https://i.imgur.com/f5FeugI.png)
 
@@ -106,9 +104,9 @@ Finally, inputting `reset; sh 1>&0 2>&0` into the `Command to execute` field we 
 
 ![root](https://i.imgur.com/3B2q6dP.png)
 
-## Path 2: FTP
+# Path 2: FTP
 
-### External
+## External
 
 ```
 PORT   STATE SERVICE VERSION
