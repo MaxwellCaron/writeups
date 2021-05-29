@@ -2,10 +2,9 @@
 
 This room is based on the original Pokemon series. Can you obtain all the Pokemon in this room?
 
+# External
 
-## External
-
-Inital `nmap` scan:
+Initial `nmap` scan:
 ```
 PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
@@ -23,9 +22,9 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Since we don't have any ssh credentials right now, lets run some scans on the web page running on port `80`.
 
-I'll save you some time after running my inital `gobuster` and `nikto` scans, nothing came back, so looks like it's time for some manual enumeration.
+I'll save you some time after running my initial `gobuster` and `nikto` scans, nothing came back, so looks like it's time for some manual enumeration.
 
-## Web App
+# Web App
 
 ![webpage](https://i.imgur.com/NlYY0qd.png)
 
@@ -39,19 +38,19 @@ The comment above looks unfamiliar from any default `apache2` page I have seen s
 
 ![console](https://i.imgur.com/XiDm39t.png)
 
-We see that there is an array of 10 differeny pokemon.
+We see that there is an array of 10 different pokemon.
 
-At this point I looked up if I could some how interract with this array in some weird way or inject it, and no, I was a bit lost until I looked back at the page source and...
+At this point I looked up if I could some how interact with this array in some weird way or inject it, and no, I was a bit lost until I looked back at the page source and...
 
 ![creds](https://i.imgur.com/jV0eYFr.png)
 
-Right above the comment that I was so infatuated about, there are two strage html tags with a colon inbetween them, from experience this normally means an `username:password` combination.
+Right above the comment that I was so infatuated about, there are two strange html tags with a colon in between them, from experience this normally means an `username:password` combination.
 
 ![ssh](https://i.imgur.com/Rtgb2jd.png)
 
 Looks like they worked!
 
-## Internal
+# Internal
 
 ![home](https://i.imgur.com/pyINXcg.png)
 
@@ -71,7 +70,7 @@ I decided to head over to where the web server is running `/var/www/html`.
 
 ![water](https://i.imgur.com/0U2PeBF.png)
 
-There it is! Upon catting the flag out, the flag seems a big off, doesnt really look like any hash or anythin juts a little, *scrambled* once again from experience, I know that we can use an online [Caesar Cipher](https://en.wikipedia.org/wiki/Caesar_cipher) decoder to unscrable the pokemon.
+There it is! Upon catting the flag out, the flag seems a big off, doesn't really look like any hash or anything just a little, *scrambled* once again from experience, I know that we can use an online [Caesar Cipher](https://en.wikipedia.org/wiki/Caesar_cipher) decoder to unscramble the pokemon.
 
 ![caesar](https://i.imgur.com/TGBmolF.png)
 
@@ -93,11 +92,11 @@ The pattern did in fact continue and reading the contents of the file we see onc
 
 ![base](https://i.imgur.com/cD8lmIT.png)
 
-By echo-ing the encoded text and piping it into the integraded `base64` command in linux we can see the decoded flag and submit it.
+By echo-ing the encoded text and piping it into the integrated `base64` command in linux we can see the decoded flag and submit it.
 
-Now it those are all of the flags that the user `pokemon` has direct access to so, now it is time to priv esc
+Now it those are all of the flags that the user `pokemon` has direct access to so, now it is time to privesc
 
-By running a recursive directory search on the `/home` directory we can see if there are any interesting files deep into any file trees, and we get something pretty intersting.
+By running a recursive directory search on the `/home` directory we can see if there are any interesting files deep into any file trees, and we get something pretty interesting.
 
 ```
 pokemon@root:~$ ls -laR /home
@@ -115,7 +114,7 @@ Now that we are a new user we will start our manual enumeration, let's see if we
 
 ![sudol](https://i.imgur.com/WTBhbKg.png)
 
-Running this command we see that we can run any command as any user, inclusing `root`. Knowing the location of `root`'s pokemon, we can cat-it-out using `sudo`. *(or we can just do `sudo /bin/bash -p` and become `root`)*
+Running this command we see that we can run any command as any user, including `root`. Knowing the location of `root`'s pokemon, we can cat-it-out using `sudo`. *(or we can just do `sudo /bin/bash -p` and become `root`)*
 
 ![rootflag](https://i.imgur.com/l4NOxJt.png)
 
