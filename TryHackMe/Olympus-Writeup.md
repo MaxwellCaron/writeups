@@ -145,7 +145,7 @@ Checking for password re-use, we get a successful logon as `prometheus:summertim
 
 Reading the chats, we see that they are talking about the file upload functionality and how it renames the file randomly.
 
-Knowing that these files and chats have to be stored somewhere, we can look back to our [[80 HTTP#SQL Injection|SQL injection]] and see if we find anoy other interesting databases, tables, or colums.
+Knowing that these files and chats have to be stored somewhere, we can look back to our SQL injection and see if we find anoy other interesting databases, tables, or colums.
 
 <br><br>
 
